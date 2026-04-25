@@ -29,7 +29,7 @@
       <a-assets>
         <img
           id="groundTexture"
-          src="https://cdn.aframe.io/a-painter/images/floor.jpg"
+          src="https://cdn.aframe.io/a-painter/images/floor.png"
           crossorigin="anonymous"
         />
       </a-assets>
@@ -60,10 +60,14 @@
         <a-entity id="carroVisual" position="0 1.3 0">
           <a-box width="1" height="0.5" depth="2" color="red"></a-box>
           <a-box position="0 0.45 -0.45" width="0.9" height="0.45" depth="0.9" color="#cc2222"></a-box>
-          <a-box position="-0.28 0.12 -1.02" width="0.16" height="0.08" depth="0.08" color="#ffe08a"></a-box>
-          <a-box position="0.28 0.12 -1.02" width="0.16" height="0.08" depth="0.08" color="#ffe08a"></a-box>
-          <a-box position="-0.28 0.12 1.02" width="0.12" height="0.08" depth="0.08" color="#b22222"></a-box>
-          <a-box position="0.28 0.12 1.02" width="0.12" height="0.08" depth="0.08" color="#b22222"></a-box>
+          <a-box position="-0.28 0.12 -1.02" width="0.16" height="0.08" depth="0.08" color="#b22222"></a-box>
+          <a-box position="0.28 0.12 -1.02" width="0.16" height="0.08" depth="0.08" color="#b22222"></a-box>
+          <a-light type="point" color="#ff3b30" intensity="0.55" distance="6" decay="2" position="-0.28 0.12 -1.18"></a-light>
+          <a-light type="point" color="#ff3b30" intensity="0.55" distance="6" decay="2" position="0.28 0.12 -1.18"></a-light>
+          <a-box position="-0.28 0.12 1.02" width="0.12" height="0.08" depth="0.08" color="#ffe08a"></a-box>
+          <a-box position="0.28 0.12 1.02" width="0.12" height="0.08" depth="0.08" color="#ffe08a"></a-box>
+          <a-light type="point" color="#ffffff" intensity="0.9" distance="10" decay="2" position="-0.28 0.12 1.18"></a-light>
+          <a-light type="point" color="#ffffff" intensity="0.9" distance="10" decay="2" position="0.28 0.12 1.18"></a-light>
 
           <a-entity position="-0.6 -0.2 0.8">
             <a-entity class="roda">
@@ -101,7 +105,8 @@
         const atrito = 0.002;
         const velocidadeMaxima = 0.35;
         const velocidadeRe = -0.08;
-        const velocidadeRotacao = 2.2;
+        const velocidadeRotacaoMin = 0.6;
+        const velocidadeRotacaoMax = 2.2;
         let giroRodas = 0;
         let velocidadeAtual = 0;
         let anguloY = 0;
@@ -138,13 +143,20 @@
 
           if (Math.abs(velocidadeAtual) > 0.001) {
             const direcao = velocidadeAtual >= 0 ? 1 : -1;
+            const intensidadeVelocidade = Math.min(
+              Math.abs(velocidadeAtual) / velocidadeMaxima,
+              1
+            );
+            const rotacaoAtual =
+              velocidadeRotacaoMin +
+              (velocidadeRotacaoMax - velocidadeRotacaoMin) * intensidadeVelocidade;
 
             if (teclas.a) {
-              anguloY += velocidadeRotacao * direcao;
+              anguloY += rotacaoAtual * direcao;
             }
 
             if (teclas.d) {
-              anguloY -= velocidadeRotacao * direcao;
+              anguloY -= rotacaoAtual * direcao;
             }
           }
 
