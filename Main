@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+        font-family: Arial, sans-serif;
+      }
+
+      .hud {
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        z-index: 10;
+        padding: 10px 14px;
+        border-radius: 10px;
+        background: rgba(0, 0, 0, 0.6);
+        color: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="hud">Use W/S para acelerar e frear, A/D para virar</div>
+
+    <a-scene background="color: #87ceeb">
+      <a-assets>
+        <img
+          id="groundTexture"
+          src="https://cdn.aframe.io/a-painter/images/floor.jpg"
+          crossorigin="anonymous"
+        />
+      </a-assets>
+
+      <a-entity id="cameraRig" position="0 6 -5">
+        <a-camera
+          id="camera"
+          position="0 0 -5"
+          rotation="-12 180 0"
+          look-controls="enabled: false"
+          wasd-controls="enabled: false"
+        ></a-camera>
+      </a-entity>
+
+      <a-light type="ambient" intensity="0.8"></a-light>
+      <a-light type="directional" position="5 10 5"></a-light>
+
+      <a-plane
+        position="0 0 0"
+        rotation="-90 0 0"
+        width="500"
+        height="200"
+        src="#groundTexture"
+        repeat="80 32"
+      ></a-plane>
+
+      <a-entity id="carro" position="0 0 -5">
+        <a-entity id="carroVisual" position="0 1.3 0">
+          <a-box width="1" height="0.5" depth="2" color="red"></a-box>
+          <a-box position="0 0.45 -0.45" width="0.9" height="0.45" depth="0.9" color="#cc2222"></a-box>
+          <a-box position="-0.28 0.12 -1.02" width="0.16" height="0.08" depth="0.08" color="#ffe08a"></a-box>
+          <a-box position="0.28 0.12 -1.02" width="0.16" height="0.08" depth="0.08" color="#ffe08a"></a-box>
+          <a-box position="-0.28 0.12 1.02" width="0.12" height="0.08" depth="0.08" color="#b22222"></a-box>
+          <a-box position="0.28 0.12 1.02" width="0.12" height="0.08" depth="0.08" color="#b22222"></a-box>
+
+          <a-entity position="-0.6 -0.2 0.8">
+            <a-entity class="roda">
+              <a-cylinder radius="0.3" height="0.3" rotation="0 0 90" color="black"></a-cylinder>
+            </a-entity>
+          </a-entity>
+          <a-entity position="0.6 -0.2 0.8">
+            <a-entity class="roda">
+              <a-cylinder radius="0.3" height="0.3" rotation="0 0 90" color="black"></a-cylinder>
+            </a-entity>
+          </a-entity>
+          <a-entity position="-0.6 -0.2 -0.8">
+            <a-entity class="roda">
+              <a-cylinder radius="0.3" height="0.3" rotation="0 0 90" color="black"></a-cylinder>
+            </a-entity>
+          </a-entity>
+          <a-entity position="0.6 -0.2 -0.8">
+            <a-entity class="roda">
+              <a-cylinder radius="0.3" height="0.3" rotation="0 0 90" color="black"></a-cylinder>
+            </a-entity>
+          </a-entity>
+        </a-entity>
+      </a-entity>
+    </a-scene>
+
+    <script>
+      window.addEventListener('load', function () {
+        const carro = document.querySelector('#carro');
+        const cameraRig = document.querySelector('#cameraRig');
+        const rodas = document.querySelectorAll('.roda');
+        const teclas = Object.create(null);
+        const cameraAltura = 4;
+        const aceleracao = 0.004;
+        const frenagem = 0.006;
+        const atrito = 0.002;
+        const velocidadeMaxima = 0.35;
+        const velocidadeRe = -0.08;
+        const velocidadeRotacao = 2.2;
+        let giroRodas = 0;
+        let velocidadeAtual = 0;
+        let anguloY = 0;
+        const direcaoFrente = new THREE.Vector3();
+        window.addEventListener('keydown', function (event) {
+          teclas[event.key.toLowerCase()] = true;
+        });
+
+        window.addEventListener('keyup', function (event) {
+          teclas[event.key.toLowerCase()] = false;
+        });
+
+        window.addEventListener('blur', function () {
+          Object.keys(teclas).forEach(function (tecla) {
+            teclas[tecla] = false;
+          });
+        });
+
+        function animar() {
+          const atual = carro.getAttribute('position');
+          let x = atual.x;
+          let z = atual.z;
+          let moveu = false;
+
+          if (teclas.w) {
+            velocidadeAtual = Math.min(velocidadeAtual + aceleracao, velocidadeMaxima);
+          } else if (teclas.s) {
+            velocidadeAtual = Math.max(velocidadeAtual - frenagem, velocidadeRe);
+          } else if (velocidadeAtual > 0) {
+            velocidadeAtual = Math.max(velocidadeAtual - atrito, 0);
+          } else if (velocidadeAtual < 0) {
+            velocidadeAtual = Math.min(velocidadeAtual + atrito, 0);
+          }
+
+          if (Math.abs(velocidadeAtual) > 0.001) {
+            const direcao = velocidadeAtual >= 0 ? 1 : -1;
+
+            if (teclas.a) {
+              anguloY += velocidadeRotacao * direcao;
+            }
+
+            if (teclas.d) {
+              anguloY -= velocidadeRotacao * direcao;
+            }
+          }
+
+          carro.setAttribute('rotation', { x: 0, y: anguloY, z: 0 });
+
+          if (Math.abs(velocidadeAtual) > 0.001) {
+            carro.object3D.getWorldDirection(direcaoFrente);
+            x += direcaoFrente.x * velocidadeAtual;
+            z += direcaoFrente.z * velocidadeAtual;
+            moveu = true;
+          }
+
+          carro.setAttribute('position', { x: x, y: atual.y, z: z });
+
+          if (moveu) {
+            giroRodas -= velocidadeAtual * 400;
+
+            rodas.forEach(function (roda) {
+              roda.object3D.rotation.x = THREE.MathUtils.degToRad(giroRodas);
+            });
+          }
+
+          cameraRig.setAttribute('position', {
+            x: x,
+            y: atual.y + cameraAltura,
+            z: z
+          });
+          cameraRig.setAttribute('rotation', {
+            x: 0,
+            y: anguloY,
+            z: 0
+          });
+
+          requestAnimationFrame(animar);
+        }
+
+        animar();
+      });
+    </script>
+  </body>
+</html>
