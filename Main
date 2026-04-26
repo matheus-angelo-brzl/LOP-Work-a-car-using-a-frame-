@@ -29,7 +29,12 @@
       <a-assets>
         <img
           id="groundTexture"
-          src="https://cdn.aframe.io/a-painter/images/floor.png"
+          src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='256' height='256' viewBox='0 0 256 256'><rect width='256' height='256' fill='%23323232'/><g opacity='0.18'><circle cx='20' cy='28' r='2' fill='%23525252'/><circle cx='64' cy='52' r='2' fill='%235b5b5b'/><circle cx='108' cy='24' r='2' fill='%23585858'/><circle cx='160' cy='60' r='2' fill='%23565656'/><circle cx='210' cy='34' r='2' fill='%235d5d5d'/><circle cx='34' cy='112' r='2' fill='%23585858'/><circle cx='86' cy='140' r='2' fill='%23535353'/><circle cx='138' cy='116' r='2' fill='%235c5c5c'/><circle cx='196' cy='146' r='2' fill='%23575757'/><circle cx='228' cy='120' r='2' fill='%235d5d5d'/><circle cx='22' cy='204' r='2' fill='%235a5a5a'/><circle cx='76' cy='222' r='2' fill='%23585858'/><circle cx='128' cy='196' r='2' fill='%23505050'/><circle cx='184' cy='228' r='2' fill='%235d5d5d'/><circle cx='230' cy='202' r='2' fill='%23565656'/></g><rect x='120' y='0' width='16' height='52' fill='%23f2e37a'/><rect x='120' y='76' width='16' height='52' fill='%23f2e37a'/><rect x='120' y='152' width='16' height='52' fill='%23f2e37a'/><rect x='120' y='228' width='16' height='28' fill='%23f2e37a'/></svg>"
+          crossorigin="anonymous"
+        />
+        <img
+          id="wheelTexture"
+          src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='128' height='128' viewBox='0 0 128 128'><rect width='128' height='128' fill='%23090909'/><g stroke='%235f5f5f' stroke-width='6' opacity='0.9'><path d='M10 0 L34 128'/><path d='M42 0 L66 128'/><path d='M74 0 L98 128'/><path d='M106 0 L130 128'/></g><g stroke='%23242424' stroke-width='10' opacity='0.95'><path d='M-6 12 L18 140'/><path d='M26 -12 L50 116'/><path d='M58 12 L82 140'/><path d='M90 -12 L114 116'/><path d='M122 12 L146 140'/></g><g opacity='0.25'><circle cx='20' cy='20' r='2' fill='%23707070'/><circle cx='54' cy='30' r='2' fill='%23606060'/><circle cx='88' cy='22' r='2' fill='%23787878'/><circle cx='110' cy='40' r='2' fill='%23666666'/><circle cx='28' cy='82' r='2' fill='%23757575'/><circle cx='64' cy='96' r='2' fill='%23626262'/><circle cx='98' cy='78' r='2' fill='%23727272'/><circle cx='116' cy='108' r='2' fill='%23686868'/></g></svg>"
           crossorigin="anonymous"
         />
       </a-assets>
@@ -53,7 +58,7 @@
         width="500"
         height="200"
         src="#groundTexture"
-        repeat="80 32"
+        repeat="18 8"
       ></a-plane>
 
       <a-entity id="carro" position="0 0 -5">
@@ -71,22 +76,22 @@
 
           <a-entity position="-0.6 -0.2 0.8">
             <a-entity class="roda">
-              <a-cylinder radius="0.3" height="0.3" rotation="0 0 90" color="black"></a-cylinder>
+              <a-cylinder radius="0.3" height="0.3" rotation="0 0 90" src="#wheelTexture"></a-cylinder>
             </a-entity>
           </a-entity>
           <a-entity position="0.6 -0.2 0.8">
             <a-entity class="roda">
-              <a-cylinder radius="0.3" height="0.3" rotation="0 0 90" color="black"></a-cylinder>
+              <a-cylinder radius="0.3" height="0.3" rotation="0 0 90" src="#wheelTexture"></a-cylinder>
             </a-entity>
           </a-entity>
           <a-entity position="-0.6 -0.2 -0.8">
             <a-entity class="roda">
-              <a-cylinder radius="0.3" height="0.3" rotation="0 0 90" color="black"></a-cylinder>
+              <a-cylinder radius="0.3" height="0.3" rotation="0 0 90" src="#wheelTexture"></a-cylinder>
             </a-entity>
           </a-entity>
           <a-entity position="0.6 -0.2 -0.8">
             <a-entity class="roda">
-              <a-cylinder radius="0.3" height="0.3" rotation="0 0 90" color="black"></a-cylinder>
+              <a-cylinder radius="0.3" height="0.3" rotation="0 0 90" src="#wheelTexture"></a-cylinder>
             </a-entity>
           </a-entity>
         </a-entity>
